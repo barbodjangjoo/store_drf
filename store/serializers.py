@@ -1,7 +1,9 @@
 from decimal import Decimal
 from rest_framework import serializers
 
-
+class CategorySerializer(serializers.Serializer):
+    title = serializers.CharField(max_length = 255)
+    description = serializers.CharField(max_length=255)
 
 class ProductSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -9,7 +11,7 @@ class ProductSerializer(serializers.Serializer):
     unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
     unit_price_after_tax = serializers.SerializerMethodField()
     inventory = serializers.IntegerField()
-    category = serializers.StringRelatedField()
+    category = CategorySerializer()
 
 
     def get_unit_price_after_tax(self, product):
