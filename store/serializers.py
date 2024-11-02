@@ -1,22 +1,27 @@
 from decimal import Decimal
 from rest_framework import serializers
 
-from .models import Category
+from .models import Category, Product
 
 class CategorySerializer(serializers.Serializer):
     title = serializers.CharField(max_length = 255)
     description = serializers.CharField(max_length=255)
 
-class ProductSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField(max_length=255)
-    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
+class ProductSerializer(serializers.ModelSerializer):
+    # id = serializers.IntegerField()
+    title = serializers.CharField(max_length=255 , source = 'name')
+    price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')
     unit_price_after_tax = serializers.SerializerMethodField()
-    inventory = serializers.IntegerField()
+    # inventory = serializers.IntegerField()
     category = serializers.HyperlinkedRelatedField(
         queryset = Category.objects.all(),
         view_name = 'category-detail',
     )
+    
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'price', 'inventory', 'category', 'unit_price_after_tax']
+
 
 
     def get_unit_price_after_tax(self, product):
