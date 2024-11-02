@@ -11,22 +11,22 @@ from .serializers import ProductSerializer, CategorySerializer
 @api_view()
 def product_list(request):
     queryset = Product.objects.select_related('category').all()
-    serializer = ProductSerializer(queryset, many = True)
+    serializer = ProductSerializer(queryset, many = True, context = {'request': request})
     return Response(serializer.data)
 
 
 @api_view()
-def product_detail(request, id):
+def product_detail(request, pk):
     product = get_object_or_404(
         Product.objects.select_related('category'),
-          pk=id
+          pk=pk
           )
-    serializer = ProductSerializer(product)
+    serializer = ProductSerializer(product, context = {'request': request})
     return Response(serializer.data)
 
 @api_view()
-def category_detail(request, id):
-    category = get_object_or_404(Category, pk=id)
+def category_detail(request, pk):
+    category = get_object_or_404(Category, pk=pk)
     serializer = CategorySerializer(category)
     return Response(serializer.data)
 
