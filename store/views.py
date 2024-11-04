@@ -41,12 +41,36 @@ def product_detail(request, pk):
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET', 'POST'])
+def category_list(request):
+    if request.method == 'GET':
+        queryset = Category.objects.all()
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = CategorySerializer(data= request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
-@api_view()
+@api_view(['GET', 'PUT', 'DELETE'])
 def category_detail(request, pk):
-    category = get_object_or_404(Category, pk=pk)
-    serializer = CategorySerializer(category)
-    return Response(serializer.data)
+    category = get_object_or_404(Category,pk=pk)
+    if request.method == 'GET':
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = CategorySerializer(category ,data= request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        if category.products.count() > 0:
+            return Response({'error' : 'Category can not be deleted'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
