@@ -1,20 +1,26 @@
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.views import APIView 
 
 
 from  .models import Category, Product
 from .serializers import ProductSerializer, CategorySerializer
 
-@api_view(['GET', 'POST'])
-def product_list(request):
-    if request.method == 'GET':
+
+class ProductList(APIView):
+    def get(self, request):
         queryset = Product.objects.select_related('category').all()
-        serializer = ProductSerializer(queryset, many = True, context = {'request': request})
+        serializer = ProductSerializer(
+            queryset, 
+            many = True, 
+            context = {'request': request})
         return Response(serializer.data)
-    elif request.method == 'POST':
+
+    def post(self, request):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -44,7 +50,9 @@ def product_detail(request, pk):
 @api_view(['GET', 'POST'])
 def category_list(request):
     if request.method == 'GET':
-        queryset = Category.objects.all()
+        queryset = Category.objects.annotate(
+            products_count=Count('products')
+            ).all()
         serializer = CategorySerializer(queryset, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
