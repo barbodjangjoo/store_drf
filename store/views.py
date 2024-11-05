@@ -59,9 +59,7 @@ class ProductDetail(APIView):
 class CategoryList(APIView):
 
     def get(self, request):
-            queryset = Category.objects.annotate(
-            products_count=Count('products')
-            ).all()
+            queryset = Category.objects.prefetch_related('products').all()
             serializer = CategorySerializer(queryset, many=True)
             return Response(serializer.data)
     
@@ -71,21 +69,39 @@ class CategoryList(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+# @api_view(['GET', 'POST'])
+# def category_list(request):
+#     if request.method == 'GET':
+#         queryset = Category.objects.prefetch_related('products').all()
+#         serializer = CategorySerializer(queryset, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = CategorySerializer(data= request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-@api_view(['GET', 'POST'])
-def category_list(request):
-    if request.method == 'GET':
-        queryset = Category.objects.annotate(
-            products_count=Count('products')
-            ).all()
-        serializer = CategorySerializer(queryset, many=True)
+class CategoryDetail(APIView):
+    def get(self, request, pk):
+        category = get_object_or_404(Category,pk=pk)
+        serializer = CategorySerializer(category)
         return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = CategorySerializer(data= request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+    def put(self, request, pk):
+        category = get_object_or_404(Category,pk=pk)
+        serializer = CategorySerializer(category ,data= request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, pk):
+        category = get_object_or_404(Category,pk=pk)
+        if category.products.count() > 0:
+            return Response({'error' : 'Category can not be deleted'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def category_detail(request, pk):
