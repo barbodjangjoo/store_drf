@@ -24,7 +24,37 @@ class ProductList(APIView):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response('COol')
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class ProductDetail(APIView):
+    model = Product
+    def get(self, request, pk):
+        product = get_object_or_404(
+        Product.objects.select_related('category'),
+        pk=pk
+        )
+        serializer = ProductSerializer(product, context = {'request': request})
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        product = get_object_or_404(
+        Product.objects.select_related('category'),
+        pk=pk
+        )
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        product = get_object_or_404(
+        Product.objects.select_related('category'),
+        pk=pk
+        )
+        if product.order_items.count() > 0:
+            return Response({'error': 'Product is in use'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
