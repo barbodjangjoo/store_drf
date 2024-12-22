@@ -27,7 +27,7 @@ class Product(models.Model):
     inventory = models.IntegerField(validators=[MinValueValidator(0)])
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
-    discounts = models.ManyToManyField(Discount, blank=True)
+    discounts = models.ManyToManyField(Discount, blank=True, related_name='discounts')
 
     def __str__(self):
         return self.name
