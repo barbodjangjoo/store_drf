@@ -10,8 +10,6 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-
-
 class Discount(models.Model):
     discount = models.FloatField()
     description = models.CharField(max_length=255)
@@ -48,7 +46,7 @@ class Customer(models.Model):
 
 
 class Address(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True, related_name='address')
     province = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
