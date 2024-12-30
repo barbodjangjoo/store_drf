@@ -1,7 +1,14 @@
 from django.shortcuts import render
-from .models import Product
+from . import models
 
-def show_data(request):
+def practice_one(request):
 
-    queryset = Product.objects.filter(name__icontains='site', datetime_modified__year=2020,inventory__gt=5)
+    queryset = models.OrderItem.objects.all().filter(id=1)
+    if queryset.exists():
+        print('hello')
+        return render(request, 'store/hello.html', {'products': list(queryset)})
+    return render(request, 'store/hello.html', {'products': list(queryset)})
+
+def practice_two(request):
+    queryset = models.Product.objects.all().filter(inventory=5)
     return render(request, 'store/hello.html', {'products': list(queryset)})
