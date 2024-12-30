@@ -8,5 +8,7 @@ urlpatterns = [
     path('practice_four/', views.practice_four,),
     path('practice_five/', views.practice_five,),
     path('practice_six/', views.practice_six,),
-    # path('practice_seven/', views.practice_seven,),
+    path('practice_seven/', views.practice_seven,),
+    path('practice_eight/', views.practice_eight,),
+    path('practice_nine/', views.practice_nine,),
 ]

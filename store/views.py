@@ -2,11 +2,7 @@ from django.shortcuts import render
 from . import models
 
 def practice_one(request):
-
-    queryset = models.OrderItem.objects.all().filter(id=1)
-    if queryset.exists():
-        print('hello')
-        return render(request, 'store/hello.html', {'products': list(queryset)})
+    queryset = models.OrderItem.objects.filter(product__id=1)
     return render(request, 'store/hello.html', {'products': list(queryset)})
 
 def practice_two(request):
@@ -26,7 +22,7 @@ def practice_five(request):
     return render(request, 'store/hello.html', {'products': list(queryset)})
 
 def practice_six(request):
-    queryset = models.Order.objects.filter(id=1)
+    queryset = models.OrderItem.objects.filter(id=1)
     return render(request, 'store/hello.html', {'products': list(queryset)})
 
 def practice_seven(request):
