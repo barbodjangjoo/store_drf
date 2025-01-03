@@ -2,7 +2,7 @@ from django.shortcuts import render
 from . import models
 
 def show_data(request):
-    queryset = models.Comment.objects.select_related('product').all()
+    queryset = models.Comment.select_related('product').objects.all() 
     return render(request, 'store/hello.html',context={'comments':queryset})
 
 def practice_two(request):
@@ -10,5 +10,5 @@ def practice_two(request):
     return render(request, 'store/practice_two.html', context={'products': queryset})
     
 def practice_three(request):
-    queryset = models.Order.objects.prefetch_related('items').select_related('customer').all()
+    queryset = models.Order.objects.prefetch_related('items__product ').select_related('customer').all()
     return render(request, 'store/practice_three.html', {'orders': queryset})

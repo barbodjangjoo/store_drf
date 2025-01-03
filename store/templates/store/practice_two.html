@@ -6,11 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-    {% for product in products.all %}
+    {% for product in products %}
         <h1>{{product.name}}</h1>
-        {% comment %} {% for category in product.all %}
-            <h2>{{product.category.title}}</h2>
-        {% endfor %} {% endcomment %}
+        {% for comment in product.comments.all %}
+            <h2>{{product.comment.title}}</h2>
+        {% endfor %}
         {% for comment in product.comments.all %}
             {{comment.id}}
             <p>---------</p>
