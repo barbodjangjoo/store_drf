@@ -1,7 +1,7 @@
 # setup_test_data.py
 import random
 from faker import Faker
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC  # Add UTC import
 import factory
 from factory.fuzzy import FuzzyDateTime
 
@@ -66,7 +66,7 @@ class Command(BaseCommand):
         all_products = list()
         for _ in range(NUM_PRODUCTS):
             new_product = ProductFactory(category_id=random.choice(all_categories).id)
-            new_product.datetime_created = datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=timezone.utc)
+            new_product.datetime_created = datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=UTC)  # Use UTC instead of timezone.utc
             new_product.datetime_modified = new_product.datetime_created + timedelta(hours=random.randint(1, 500))
             new_product.save()
             all_products.append(new_product)
@@ -90,7 +90,7 @@ class Command(BaseCommand):
             customer_id=random.choice(all_customers).id
         ) for _ in range(NUM_ORDERS)]
         for order in all_orders:
-            order.datetime_created =  datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=timezone.utc)
+            order.datetime_created =  datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=UTC)  # Use UTC instead of timezone.utc
             order.save()
         print('DONE')
 
@@ -113,7 +113,7 @@ class Command(BaseCommand):
         for product in all_products:
             for _ in range(random.randint(1, 5)):
                 comment = CommentFactory(product_id=product.id)
-                comment.datetime_created = datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=timezone.utc)
+                comment.datetime_created = datetime(random.randrange(2019, 2023),random.randint(1,12),random.randint(1,12), tzinfo=UTC)  # Use UTC instead of timezone.utc
                 comment.save()
         print('DONE')
 
