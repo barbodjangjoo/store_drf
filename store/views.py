@@ -3,6 +3,6 @@ from django.db.models import Count, Avg, Max, Min, Sum, F, Func, Value
 from . import models
 
 def show_data(request):
-    queryset = models.Customer.objects.annotate(fullname=Func(F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
+    queryset = models.Order.unpaid_orders.all()
     print(queryset)
     return render(request, 'store/hello.html',)

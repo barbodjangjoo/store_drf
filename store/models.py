@@ -72,7 +72,7 @@ class Order(models.Model):
     status = models.CharField(max_length=1, choices=ORDER_STATUS, default=ORDER_STATUS_UNPAID)
 
     objects = models.Manager()
-    unpaid_orders = UnpaidOrderManger()
+    unpaid_orders = UnpaidOrderManger() 
 
     def __str__(self):
         return f'Order id={self.id}'
@@ -87,16 +87,9 @@ class OrderItem(models.Model):
     class Meta:
         unique_together = [['order', 'product']]
 
-
-class CommentManger(models.Manager):
-    def get_approved(self):
-        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
-
-
-class ApprovedCommentManager(models.Manager):
+class CommentApprovedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
-
+        return super().get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)    
 
 class Comment(models.Model):
     COMMENT_STATUS_WAITING = 'w'
@@ -114,8 +107,9 @@ class Comment(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
 
-    objects = CommentManger()
-    approved = ApprovedCommentManager()
+    objects = models.Manager()
+    approved =CommentApprovedManager() 
+
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
