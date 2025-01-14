@@ -105,7 +105,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'status', 'datetime_created', 'num_of_items']
     list_editable = ['status']
     list_per_page = 10
-    ordering = ['-datetime_created']
+    ordering = ['-datetime_created'] 
     inlines = [OrderItemInline]
 
     def get_queryset(self, request):
@@ -123,7 +123,7 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(models.Category)
 
 
-@admin.register(models.Customer)
+@admin.register(models.Customer)    
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'email', ]
     list_per_page = 10
